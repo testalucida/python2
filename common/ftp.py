@@ -77,6 +77,18 @@ class Ftp:
         """
         self._ftp.quit()
 
+    # def existsFile( self, remotefilename:str ) -> bool:
+    #     """
+    #     Checks if <remotefilenname> exists on the remote path set in self._ftpIni.
+    #     Returns True if file exists else False
+    #     :param remotefilename:
+    #     :return:
+    #     """
+    #     path = self._ftpIni.getRemotePath()
+    #     self._ftp.cwd( self._ftpIni.getRemotePath() )
+    #     lst = self._ftp.nlst( )
+    #     return remotefilename in lst
+
     def upload( self, localfilename:str, remotefilename:str ) -> None:
         """
         stores file <localfilename> from folder self._ftpIni.getLocalPath() as file <remotefilename> to
@@ -138,7 +150,7 @@ class Ftp:
             raise( x )
             #raise( Exception( "ftp.download(): Download %s to %s failed:\n%s" % ( remotepathnfile, localpathnfile, str( x ) ) ) )
 
-    def exists(self, filename:str) -> bool:
+    def existsFile(self, filename:str) -> bool:
         """
         checks if given filename exists in specified remotePath (see file ftpIni)
         :param filename: filename to check
@@ -156,7 +168,7 @@ class Ftp:
         self._ftp.cwd( pwd )
         return file_exists
 
-    def delete(self, filename:str) -> None:
+    def deleteFile(self, filename:str) -> None:
         """
         deletes file <filename> from remotePath (see file ftpIni).
         Raises Exception if operation is not successful.

@@ -92,6 +92,8 @@ class MietobjektLogic( IccLogic ):
         xvw: XVerwalter2 = self._data.getVerwalterDetails2(xmaster.vw_id, xmaster.master_name)
         if xvw and xvw.vw_id:
             # es gibt eine Verwaltung
+            if xvw.strasse is None: xvw.strasse = ""
+            if xvw.plz_ort is None: xvw.plz_ort = ""
             xmaster.verwalter = xvw.name + "\n" + xvw.strasse + "\n" + xvw.plz_ort
             xmaster.verwalter_mailto = xvw.mailto
             xmaster.verwalter_telefon_1 = xvw.telefon_1
