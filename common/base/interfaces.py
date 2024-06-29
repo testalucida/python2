@@ -68,30 +68,15 @@ class XBase:
     def print( self ):
         print( self.toString( printWithClassname=True ) )
 
-def test_getDifferences():
-    class Test:
-        def __init__(self, i:int, s:str):
-            self.i = i
-            self.s = s
-
-        def __eq__(self, other):
-            return self.i == other.i and self.s == other.s
-
-    class XA(XBase):
-        def __init__(self, v1:str, t:Test):
-            XBase.__init__(self)
-            self.v1 = v1
-            self.test:Test = t
-
-        def __eq__(self, other):
-            return self.v1 == other.v1 and self.test == other.test
-
-    xa1 = XA("abc", Test(1, "def"))
-    xa2 = XA("abc", Test(1, "def"))
-    equals = xa1.equals(xa2)
-    print( "sind gleich: ", equals)
-
-test_getDifferences()
+class XSeriesItem( XBase ):
+    """
+    Generische Schnittstelle, wenn eine pandas.Series in eine XBase-List umgewandelt werden soll.
+    Jedes Item des Series-Objekts wird dazu in ein XSeriesItem-Objekt umgewandelt.
+    """
+    def __init__( self, index:Any=None, value:Any=None ):
+        XBase.__init__( self )
+        self.index:Any = index
+        self.value:Any = value
 
 #################   ButtonDefinition   #######################
 class ButtonDefinition:

@@ -61,8 +61,14 @@ class OkCancelDialog( QDialog ):
     def setCancellationFunction( self, fnc ):
         self._cancellationFnc = fnc
 
-    def showErrorMessage( self, title:str, msg:str ):
+    @staticmethod
+    def showErrorMessage( title:str, msg:str ):
         mb = QMessageBox( QMessageBox.Critical, title, msg )
+        mb.exec_()
+
+    @staticmethod
+    def showWarningMessage( title:str, msg:str ):
+        mb = QMessageBox( QMessageBox.Warning, title, msg )
         mb.exec_()
 
 ###################################################################################
@@ -141,6 +147,39 @@ class OkDialog( QDialog ):
         self._layout.addWidget( widget, row, 0 )
 
 
+
+def testOkCancelDialog():
+    def beforeAccept():
+        print( "beforeAccept" )
+
+    def onCancel():
+        print( "onCancel" )
+
+    app = QApplication()
+    dlg = OkCancelDialog()
+    dlg.setWindowTitle( "testdialog" )
+    dlg.setOkButtonText( "Speichern" )
+    lbl = QLabel( "Man beachte diesen erstaunlichen Dialog" )
+    dlg.addWidget( lbl, 0 )
+    lbl = QLabel( "Did you?" )
+    dlg.addWidget( lbl, 2 )
+    dlg.setBeforeAcceptFunction( beforeAccept )
+    dlg.setCancellationFunction( onCancel )
+    dlg.show()
+    app.exec_()
+
+def testOkCancelDialog2():
+    app = QApplication()
+    dlg = OkCancelDialog2()
+    dlg.setWindowTitle( "testdialog" )
+    dlg.setOkButtonText( "Speichern" )
+    lbl = QLabel( "Man beachte diesen erstaunlichen Dialog" )
+    dlg.addWidget( lbl, 0 )
+    lbl = QLabel( "Did you?" )
+    dlg.addWidget( lbl, 2 )
+    dlg.show()
+    app.exec_()
+
 def testOkDialog():
     app = QApplication()
     dlg = OkDialog()
@@ -152,18 +191,6 @@ def testOkDialog():
     dlg.addWidget( lbl, 2 )
     dlg.exec_()
 
-
-def testOkCancelDialog():
-    app = QApplication()
-    dlg = OkCancelDialog()
-    dlg.setWindowTitle( "testdialog" )
-    dlg.setOkButtonText( "Speichern" )
-    lbl = QLabel( "Man beachte diesen erstaunlichen Dialog" )
-    dlg.addWidget( lbl, 0 )
-    lbl = QLabel( "Did you?" )
-    dlg.addWidget( lbl, 2 )
-    dlg.show()
-    app.exec_()
 
 if __name__ == "__main__":
     testOkCancelDialog()

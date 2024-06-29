@@ -2,7 +2,7 @@ import enum
 import numbers
 from abc import abstractmethod
 from enum import Enum
-from typing import Any, List, Tuple, Callable, Iterable
+from typing import Any, List, Tuple, Callable, Iterable, Union
 
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtCore import QDate, Qt, QAbstractTableModel, QRect, Signal, QSize, QMargins, QEvent, QObject
@@ -10,7 +10,7 @@ from PySide2.QtGui import QDoubleValidator, QIntValidator, QFont, QGuiApplicatio
     QMouseEvent, QTextDocument, QIcon, QFontMetrics, QValidator, QCursor
 from PySide2.QtWidgets import QDialog, QCalendarWidget, QVBoxLayout, QBoxLayout, QLineEdit, QGridLayout, QPushButton, \
     QHBoxLayout, QApplication, QListView, QComboBox, QLabel, QTextEdit, QCheckBox, QFrame, QWidget, QAction, QTabWidget, \
-    QToolBar, QMenuBar, QStatusBar, QMessageBox
+    QToolBar, QMenuBar, QStatusBar, QMessageBox, QLayout
 
 import datehelper
 from base import constants
@@ -47,6 +47,15 @@ class BaseWidget( QWidget ):
         QWidget.__init__( self, parent, flags )
         self._isChanged = False
         self.ident = None
+
+    def setStyleSheetOnlySelf( self, stylesheet: str ) -> None:
+        """
+        :param stylesheet: z.B. "background: lightgray;"
+        :return:
+        """
+        objectName = self.objectName() if self.objectName() != "" else str( id( self ) )
+        self.setObjectName( objectName )
+        self.setStyleSheet( "#%s {%s}" % (objectName, stylesheet) )
 
     def setChanged( self, changed:bool ) -> None:
         self._isChanged = changed
@@ -436,6 +445,36 @@ class HistoryButton( BaseIconButton ):
         self.setToolTip( tooltip )
 
 #################   BaseGridLayout  #########################
+class GridLayoutItem:
+    def __init__( self, item:Union[QWidget, QLayout] = None, index:int = -1, posInfo:Tuple = None ):
+        self.item = item
+        self.index = index
+        self.row = -1
+        self.column = -1
+        self.rowspan = 1
+        self.colspan = 1
+        if posInfo:
+            self.row = posInfo[0]
+            self.column = posInfo[1]
+            self.rowspan = posInfo[2]
+            self.colspan = posInfo[3]
+
+    @classmethod
+    def fromLayout( cls, layout:QLayout, index:int, posInfo:Tuple ):
+        return cls( layout, index, posInfo )
+
+    @classmethod
+    def fromWidget( cls, widget:QWidget, index:int, posInfo:Tuple ):
+        return cls( widget, index, posInfo )
+
+    def isWidget( self ) -> bool:
+        return isinstance( self.item, QWidget )
+
+    def getItemType( self ) -> Union[QWidget, QLayout]:
+        return type( self.item )
+
+
+#################   BaseGridLayout  #########################
 class BaseGridLayout( QGridLayout ):
     def __init__( self ):
         QGridLayout.__init__( self )
@@ -454,6 +493,33 @@ class BaseGridLayout( QGridLayout ):
         self.addWidget( BaseLabel( lbl ), row, startCol )
         startCol += 1
         self.addWidget( widget, row, startCol, rowspan, colspan )
+
+    def getAddedItems( self ) -> List[GridLayoutItem]:
+        """
+        Liefert eine Liste der Items (Widgets oder Layouts), die dem Layout hinzugefügt wurden.
+        Die Items in der Liste sind nach Index sortiert.
+        :return:
+        """
+        l:List[GridLayoutItem] = list()
+        for i in range( 0, self.count() ):
+            item = self.itemAt( i )
+            if isinstance( item, QLayout ):
+                gli = GridLayoutItem.fromLayout( item, i )
+            else:
+                posInfo: Tuple = self.getItemPosition( i )
+                gli = GridLayoutItem.fromWidget( item.widget(), i, posInfo )
+            l.append( gli )
+        return l
+
+    def createHLine( self, r: int, columns: int = -1 ):
+        line = HLine()
+        if columns < 0: columns = self.columnCount()
+        self.addWidget( line, r, 0, 1, columns )
+
+    def createVLine( self, c: int, rows: int = -1 ):
+        line = VLine()
+        if rows < 0: rows = self.rowCount()
+        self.addWidget( line, 0, c, rows, 1 )
 
 ##################  CalenderDialog   #####################
 class CalendarDialog( QDialog ):
@@ -642,6 +708,13 @@ class BaseLabel( QLabel, AutoWidth, GetSetValue ):
         QLabel.__init__( self, parent )
         self.setValue( text )
 
+    # def mouseDoubleClickEvent( self, evt:QMouseEvent ):
+    #     self.setSelection( 0, len( self.text() ) )
+
+    # def mousePressEvent(self, ev:QMouseEvent ):
+    #     print( "mousePressed:", ev )
+    #     print( "fljds")
+
     def getValue( self ) -> str:
         return self.text()
 
@@ -659,6 +732,12 @@ class BaseLabel( QLabel, AutoWidth, GetSetValue ):
         w = self.getTextWidth( self.text() )
         self.setFixedWidth( w )
 
+def testBaseLabelMousePress():
+    app = QApplication()
+    lbl = BaseLabel()
+    lbl.setText( "Ich bin ein tooller Labbeltexxt" )
+    lbl.show()
+    app.exec_()
 
 ###################   BaseLink   ########################
 class BaseLink( BaseLabel ):
@@ -705,6 +784,7 @@ class BaseEdit( QLineEdit, AutoWidth, GetSetValue ):
 
     def setValue( self, value: str ):
         self.setText( value )
+        self.setCursorPosition( 0 )
 
     def setBold( self, bold=True ):
         font = self.font()
@@ -730,6 +810,10 @@ class BaseEdit( QLineEdit, AutoWidth, GetSetValue ):
         super().focusInEvent( evt )
         self.setSelection( 0, len( self.text() ) )
 
+    def focusOutEvent( self, evt ):
+        super().focusOutEvent( evt )
+        self.setCursorPosition( 0 )
+
     # def focusOutEvent( self, evt ):
     #     super().focusOutEvent( evt )
     #     #print( "BaseEdit: focusOut" )
@@ -740,7 +824,7 @@ class BaseEdit( QLineEdit, AutoWidth, GetSetValue ):
             if event.key() == Qt.Key_Tab:
                 #print( "%s: TAB pressed" % obj )
                 self.tab_pressed.emit()
-                return True
+                return False
         return super().eventFilter( obj, event )
 
     # def keyPressEvent( self, event ):
@@ -804,9 +888,11 @@ class SignedNumEdit( QWidget ):
     class Sign( BaseButton ):
         PLUS = "+"
         MINUS = "-"
-        def __init__( self, sign=MINUS, isEnabled=True ):
+        def __init__( self, sign=MINUS, isEnabled=True, maySwitch=True ):
             BaseButton.__init__( self, text=sign )
             self.setEnabled( isEnabled )
+            if not maySwitch and self.isEnabled():
+                self.setEnabled( False )
             self._currentSign = sign
             font = QFont( "Arial", 20 )
             font.setBold( True )
@@ -842,10 +928,10 @@ class SignedNumEdit( QWidget ):
             else:
                 self.setStyleSheet( "background-color: green; color: white" )
 
-    def __init__( self, numtype:type=float, sign="-", parent=None, isReadOnly=False ):
+    def __init__( self, numtype:type=float, sign="-", parent=None, isReadOnly=False, maySwitch=True ):
         QWidget.__init__( self, parent )
         self._type = numtype
-        self._sign = self.Sign( sign, isEnabled=not isReadOnly )
+        self._sign = self.Sign( sign, isEnabled=not isReadOnly, maySwitch=maySwitch )
         if numtype == int:
             self._numEdit = IntEdit( showNegativNumbersRed=False, isReadOnly=isReadOnly )
         else:
@@ -943,6 +1029,15 @@ class PositiveSignedFloatEdit( SignedNumEdit ):
     """
     def __init__( self, parent=None, isReadOnly=False ):
         SignedNumEdit.__init__( self, numtype=float, sign="+" )
+
+######################## FixedNegativeSignedFloatEdit ##################
+class FixedNegativeSignedFloatEdit( SignedNumEdit ):
+    """
+    Diese Klasse brauchen wir, damit wir im DynamicAttributeView ein SignedNumEdit Objekt instanzieren können,
+    das per Default "-" anzeigt und dessen Sign nicht auf "+" gestellt werden kann
+    """
+    def __init__( self, parent=None, isReadOnly=False ):
+        SignedNumEdit.__init__( self, numtype=float, sign="-", maySwitch=False )
 
 #########################  IntEdit  ################################
 class IntEdit( BaseEdit ):
@@ -1453,6 +1548,28 @@ class SearchWidget( BaseWidget ):
 
 ##########################  TEST  TEST  TEST  ################################
 
+def testGridLayoutItems():
+    app = QApplication()
+    w = QWidget()
+    l = BaseGridLayout()
+    c1 = QWidget()
+    c1.setObjectName( "c1" )
+    l.addWidget( c1, 0, 0 )
+    c2 = QWidget()
+    c2.setObjectName( "c2" )
+    l.addWidget( c2, 0, 1 )
+    c3 = QHBoxLayout()
+    c3.setObjectName( "HLayout")
+    c4 = QWidget()
+    c4.setObjectName( "c4" )
+    c3.addWidget( c4 )
+    l.addLayout( c3, 1, 0 )
+    w.setLayout( l )
+    w.show()
+    items = l.getAddedItems()
+    for item in items:
+        print( "item name: ", item.item.objectName(), " is ", item.getItemType(), " - index: ", item.index )
+    app.exec_()
 
 def testBaseDialogWithButtons3():
     def onClose():

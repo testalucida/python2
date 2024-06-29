@@ -47,6 +47,14 @@ class BaseTableFunctions:
         dlg.exec_()
 
     @staticmethod
+    def copyCellValueToClipboard( tv:QTableView, rowIdx:int, colIdx:int ):
+        tm = tv.model()
+        idx = tm.createIndex( rowIdx, colIdx )
+        val = tm.data( idx, Qt.DisplayRole )
+        clipboard = QGuiApplication.clipboard()
+        clipboard.setText( val )
+
+    @staticmethod
     def copySelectionToClipboard( tv:QTableView ):
         values: str = ""
         indexes = tv.selectedIndexes()
@@ -70,7 +78,7 @@ class BaseTableFunctions:
     @staticmethod
     def copyColumnCellsToClipboard( tv:QTableView, col:int, convertPointToComma=False ):
         """
-        Kopiert die Werte der Spalte, die durch <key> referenziert wird, ins Clipboard.
+        Kopiert die Werte der Spalte, die durch <col> referenziert wird, ins Clipboard.
         Berücksichtigt werden nur die Zellen, die markiert sind.
         :param tv:
         :param col: Index der Spalte

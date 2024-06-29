@@ -6,8 +6,10 @@ from functools import cmp_to_key
 from PySide2.QtCore import QAbstractTableModel, SIGNAL, Qt, QModelIndex, QSize, Signal
 from typing import Any, List, Dict, Tuple, Iterator, Iterable, Type
 from PySide2.QtGui import QColor, QBrush, QFont, QPixmap
+from pandas import Series
 
-from base.interfaces import XBase, Action
+from base.interfaces import XBase, Action, XSeriesItem
+
 
 ####################   FilterCondition   ###############
 class FilterCondition:
@@ -73,6 +75,43 @@ class BaseTableModel( QAbstractTableModel ):
                                                     # das kann aber durch Filterung eingeschränkt werden
         if rowList:
             self.setRowList( rowList )
+
+    @classmethod
+    def fromSeries( cls, series:Series, indexLen:int=-1, jahr:int=None ):
+        """
+        Erzeugt ein BaseTableModel-Objekt aus einer pandas.Series.
+        :param series:
+        :param indexLen: Die Länge des Index, die für das TableModel verwendet werden soll.
+                         Wenn der Index z.B. ein Timestamp ist, aber nur das Datum verwendet werden soll,
+                         muss indexLen = 10 sein.
+                         Wenn indexLen == -1, wird der gesamte Index verwendet.
+        :param jahr:
+        :return:
+        """
+        itemlist = BaseTableModel.createRowListFromSeries( series, indexLen )
+        return cls( itemlist, jahr )
+
+    @staticmethod
+    def createRowListFromSeries( series:Series, indexLen:int ) -> List[XSeriesItem]:
+        """
+        Erzeugt aus einer pandas.Series eine Liste von XSeriesItem, die für die Instanzierung
+        eines BaseTableModel verwendet werden kann
+        :param series:
+        :param indexLen: Die Länge des Index, die für das TableModel verwendet werden soll.
+                         Wenn der Index z.B. ein Timestamp ist, aber nur das Datum verwendet werden soll,
+                         muss indexLen = 10 sein.
+                         Ist indexLen == -1, wird der gesamte Index verwendet.
+        :return:
+        """
+        itemlist: List[XSeriesItem] = list()
+        for index, value in series.items():
+            if value and str(value) > "":
+                idx = str( index )
+                if indexLen > -1:
+                    idx = idx[:indexLen]
+                x = XSeriesItem( idx, value )
+                itemlist.append( x )
+        return itemlist
 
     def _setDefaultKeyHeaderMapping( self ):
         """
@@ -631,6 +670,11 @@ class SumTableModel( BaseTableModel ):
             summe = sum([e.getValue( col ) for e in objectList])
             dic = {"key": col, "sum" : summe}
             self._summen.append( dic )
+
+    @classmethod
+    def fromSeries( cls, series:Series, indexLen:int, jahr:int, colsToSum:Iterable[str] ):
+        itemlist = BaseTableModel.createRowListFromSeries( series, indexLen )
+        return cls( itemlist, jahr, colsToSum )
 
     def rowCount( self, parent: QModelIndex = None ) -> int:
         return self._rowCount

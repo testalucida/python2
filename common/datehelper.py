@@ -7,13 +7,17 @@ from typing import Tuple, Dict
 import datehelper
 from base.constants import monthLongNames, monatsletzter
 
-def getNumberOfDays( monthNumber:int ) -> int:
+def getNumberOfDays( monthNumber:int, year:int=None ) -> int:
     """
-    Schaltjahre werden vernachlässigt
+    Liefert die Anzahl Tage im gegebenen Monat. Schaltjahre werden berücksichtigt.
     :param monthNumber: 1 -> Januar, ... , 12 -> Dezember
+    :param year: wenn nicht gesetzt: current year
     :return:
     """
-    return monatsletzter[monthLongNames[monthNumber - 1]]
+    import calendar
+    if not year: year = getCurrentYear()
+    return calendar.monthrange( year, monthNumber )[1]
+    #return monatsletzter[monthLongNames[monthNumber - 1]]
 
 def currentDateIso() -> str:
     """
@@ -318,6 +322,26 @@ def getNumberOfDays2( d1:str, d2:str, year:int ):
     d2 = date( y2, m2, d2 )
     delta = d2 - d1
     return delta.days + 1
+
+def getNumberOfDays3( d1:str, d2:str ) -> int:
+    """
+    Returns the number of days between two given dates.
+    :param d1: isodate like "2023-01-01"
+    :param d2: same as d1. Must be greater (later) than d1
+    :return:
+    """
+    assert d2 > d1
+    date1 = dateutil.parser.parse( d1 )
+    date2 = dateutil.parser.parse( d2 )
+    delta = date2 - date1
+    return delta.days + 1 # +1 since delta is computed as difference between the given dates, so delta would be 0
+                          # if d1 == d2 which would be wrong.
+
+def testNumberOfDays3( ):
+    d1 = "2024-01-29"
+    d2 = "2024-01-28"
+    days = getNumberOfDays3( d1, d2 )
+    print( days + 1 )
 
 def getLastMonth() -> Tuple[int, str]:
     monat = datetime.now().month
