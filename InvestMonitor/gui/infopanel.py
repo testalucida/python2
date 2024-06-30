@@ -198,7 +198,7 @@ class InfoPanel( QFrame ):
         self._row = -1 # row im MainWindow
         self._col = -1 # col im MainWindow
         maxwnumlabels = 70
-        wdate = 65
+        wdate = 70
         self._layout = BaseGridLayout()
         self.setLayout( self._layout )
         self._mplCanvas = MplCanvas()
@@ -252,8 +252,10 @@ class InfoPanel( QFrame ):
         self._btnKaufHistorie.setFixedSize( QSize(23, 23) )
         self._lblErsterKauf = BaseEdit( isReadOnly=True )
         self._lblErsterKauf.setFixedWidth( wdate )
+        self._lblErsterKauf.setContentsMargins( 0, 0, 0,0 )
         self._lblLetzterKauf = BaseEdit( isReadOnly=True )
         self._lblLetzterKauf.setFixedWidth( wdate )
+        self._lblLetzterKauf.setContentsMargins(0, 0, 0, 0)
         self._lblPreisProStueck = FloatEdit( isReadOnly=True )
         self._lblPreisProStueck.setMaximumWidth( maxwnumlabels )
         self._lblMaxKaufpreis = FloatEdit( isReadOnly=True )
