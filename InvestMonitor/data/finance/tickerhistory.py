@@ -63,7 +63,7 @@ class TickerHistory:
     currentDate = datehelper.getIsoStringFromDate( datehelper.getCurrentDate() )
     oneYearAgo = getOneYearAgo()
     default_period:Period = Period.oneYear
-    default_interval:Interval = Interval.oneWeek
+    default_interval:Interval = Interval.fiveDays
     # currConverter = CurrencyConverter()
     # forex_curr_converter = CurrencyRates()
 
@@ -195,14 +195,14 @@ def test2():
 def testDividend():
     ticker = "ISPA.DE"  # "SEDY.L"
     tick_hist = TickerHistory()
-    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.oneWeek )
+    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.fiveDays )
     dividends: Series = df["Dividends"]
     print( dividends.index[0] )
 
 def test():
     ticker = "EUNY.DE" #"IEDY.L" #"ISPA.DE" #"SEDY.L"
     tick_hist = TickerHistory()
-    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.oneWeek )
+    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.fiveDays )
     series:Series = df["Close"]
     fastinfo = tick_hist.getFastInfo( ticker )
     last_price = fastinfo.last_price
@@ -258,7 +258,7 @@ def testFMP():
     def test():
         ticker = "EUNY.DE"  # "IEDY.L" #"ISPA.DE" #"SEDY.L"
         tick_hist = TickerHistory()
-        df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.oneWeek )
+        df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.fiveDays )
         series: Series = df["Close"]
         fastinfo = tick_hist.getFastInfo( ticker )
         last_price = fastinfo.last_price

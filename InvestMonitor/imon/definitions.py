@@ -9,5 +9,5 @@ DATABASE = ROOT_DIR + "/invest.db"
 ICON_DIR = ROOT_DIR + "/images/"
 
 DEFAULT_PERIOD = Period.oneYear
-DEFAULT_INTERVAL = Interval.oneWeek
+DEFAULT_INTERVAL = Interval.fiveDays
 DEFAULT_INFOPANEL_ORDER = InfoPanelOrder.DeltaKursAsc

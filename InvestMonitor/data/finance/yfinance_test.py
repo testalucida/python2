@@ -61,7 +61,7 @@ def testCreateTableModelFromSeries():
     from PySide2.QtWidgets import QApplication
     app = QApplication()
     ticker = yfinance.Ticker( "IEDY.L" )
-    df = ticker.history( period="1y", interval="1wk" )
+    df = ticker.history( period="1y", interval="5d" )
     series: Series = df["Dividends"]
     # divlist:List[XSeriesItem] = list()
     # for index, value in series.items():
@@ -83,7 +83,7 @@ def test6():
     import matplotlib.pyplot as plt
     ticker = yfinance.Ticker( "DBXS.DE" )
     fi = ticker.fast_info
-    df = ticker.history( period="1y", interval="1wk" )
+    df = ticker.history( period="1y", interval="5d" )
     """
     def history( self, period="1mo", interval="1d",
                  start=None, end=None, prepost=False, actions=True,
@@ -138,7 +138,7 @@ def testTranslateSeries():
     c = CurrencyConverter()
     ticker = yfinance.Ticker( "PRIJ.L" )
     fi = ticker.fast_info
-    df = ticker.history( period="1y", interval="1wk" )
+    df = ticker.history( period="1y", interval="5d" )
     series: Series = df["Close"]
     values = series.values
     vlist = list()
@@ -166,7 +166,7 @@ def test5():
 def test3():
     #ticker = yfinance.Ticker( "SPYY.DE" )
     ticker = yfinance.Ticker( "ISPA.DE" )
-    hist = ticker.history( period='ytd', interval='1wk' )
+    hist = ticker.history( period='ytd', interval='5d' )
     daten = ticker.info
     for key, value in daten.items():
         print( key, ":\t", value )

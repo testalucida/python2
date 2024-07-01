@@ -1,8 +1,7 @@
 import os
 import sys
-import time
 
-from PySide2.QtCore import QObject, QEvent, Qt, QSize, QPoint
+from PySide2.QtCore import QObject, QEvent, Qt, QPoint
 from PySide2.QtGui import QPixmap, QIcon, QCursor, QGuiApplication, QScreen
 from PySide2.QtWidgets import QApplication, QSplashScreen, QWidget
 

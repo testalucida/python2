@@ -49,7 +49,7 @@ class InvestMonitorLogic:
         self._db = InvestMonitorData()
         self._tickerHist = TickerHistory()
         self._defaultPeriod = DEFAULT_PERIOD #Period.oneYear
-        self._defaultInterval = DEFAULT_INTERVAL #Interval.oneWeek
+        self._defaultInterval = DEFAULT_INTERVAL
         self._minPeriod = Period.oneDay
         self._minInterval = Interval.oneMin
 
@@ -96,7 +96,7 @@ class InvestMonitorLogic:
     # def getSummeGesamtwerte():
     #     return InvestMonitorLogic.summe_gesamtwerte
 
-    def getDepotPosition( self, ticker:str, period=Period.oneYear, interval=Interval.oneWeek ) -> XDepotPosition:
+    def getDepotPosition( self, ticker:str, period=Period.oneYear, interval=Interval.fiveDays ) -> XDepotPosition:
         """
         Liefert alle Daten für die Depotposition <ticker>.
 
@@ -595,7 +595,7 @@ class InvestMonitorLogic:
         wkn_ticker_list.sort( key=lambda x: x["wkn"] )
         ticker_list = [x["ticker"] for x in wkn_ticker_list]
         histlist: DataFrame = \
-            self._tickerHist.getTickerHistoriesByPeriod( ticker_list, period=period, interval=Interval.oneWeek )
+            self._tickerHist.getTickerHistoriesByPeriod( ticker_list, period=period, interval=Interval.fiveDays )
         dividends: DataFrame = histlist[SeriesName.Dividends.value]
         allOrders: List[XDelta] = self.getAllOrdersList()
         wkn_list = [x["wkn"] for x in wkn_ticker_list]
@@ -636,7 +636,7 @@ class InvestMonitorLogic:
 
         tickers = [d["ticker"] for d in wkn_ticker_list]
         histlist:DataFrame = \
-            self._tickerHist.getTickerHistoriesByPeriod( tickers, period=Period.currentYear, interval=Interval.oneWeek )
+            self._tickerHist.getTickerHistoriesByPeriod( tickers, period=Period.currentYear, interval=Interval.fiveDays )
         dividends:DataFrame = histlist[SeriesName.Dividends.value]
         sum_dividends = 0
         for ticker in tickers:
@@ -656,7 +656,7 @@ class InvestMonitorLogic:
 ##################################################################################
 def testProvideFastInfoInSeparateThread():
     logic = InvestMonitorLogic()
-    depposList:List[XDepotPosition] = logic.getDepotPositions( period=Period.oneYear, interval=Interval.oneWeek )
+    depposList:List[XDepotPosition] = logic.getDepotPositions( period=Period.oneYear, interval=Interval.fiveDays )
     print( depposList )
 
 def testGetSumDividendsCurrentYear2():

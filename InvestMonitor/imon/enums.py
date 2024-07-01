@@ -81,7 +81,7 @@ class Interval( Enum ):
     oneHour = "1h"
     oneDay = "1d"
     fiveDays = "5d"
-    oneWeek = "1wk"
+    #oneWeek = "1wk" #gibt's offenbar nicht mehr
     oneMonth = "1mo"
     threeMonths = "3mo"
     unknown = "unk"
