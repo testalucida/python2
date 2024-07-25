@@ -205,7 +205,7 @@ def test2():
     ipc = InfoPanelController()
     logic = InvestMonitorLogic()
     ticker = "GLDV.L"
-    deppos = logic.getDepotPosition( ticker, Period.oneYear, Interval.fiveDays )
+    deppos = logic.getDepotPosition( ticker, Period.oneYear, Interval.oneWeek )
     ipanel = ipc.createInfoPanel( deppos )
     ipanel.show()
     app.exec_()

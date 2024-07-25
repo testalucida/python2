@@ -2,12 +2,11 @@ from typing import List, Tuple, Dict
 
 import datehelper
 from base.databasecommon2 import DatabaseCommon
-from base.interfaces import XBase
 from v2.icc.constants import EinAusArt, Umlegbar
 
 from v2.icc.definitions import DATABASE
-from v2.icc.interfaces import XHandwerkerKurz, XEinAus, XMietverhaeltnisKurz, XVerwaltung, XMasterobjekt, XMietobjekt, \
-    XKreditorLeistung, XLeistung, XMtlHausgeld, XVerwalter, XVerwalter2
+from v2.icc.interfaces import XHandwerkerKurz, XMietverhaeltnisKurz, XVerwaltung, XMasterobjekt, XMietobjekt, \
+    XKreditorLeistung, XLeistung, XVerwalter, XVerwalter2
 
 
 class DbAction:
@@ -365,8 +364,7 @@ def testupdateVerwaltungAnsprechpartner():
     data.updateVerwaltungAnsprechpartner( 22, "Frau HellsBells")
     data.commit()
 
-# if __name__ == "__main__":
-#     testupdateVerwaltungAnsprechpartner()
+
 
 def testInsertKreditorleistung():
     data = IccData()
@@ -386,3 +384,7 @@ def test():
     print( a, ", ", v )
     verwlist = data.getVerwaltungen( 2022 )
     print( verwlist )
+
+
+if __name__ == "__main__":
+    test()

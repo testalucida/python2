@@ -18,7 +18,7 @@ class FMP:
         self._endpointHistoricalPrice = "historical-price-full/"
         self._endpointDividends = "historical-price-full/stock_dividend/"
 
-    def getHistoricalPricesByTickerlist( self, tickers:str, period:Period=Period.oneYear, interval:Interval=Interval.fiveDays ) -> List[TickerData]:
+    def getHistoricalPricesByTickerlist( self, tickers:str, period:Period=Period.oneYear ) -> List[TickerData]:
         """
 
         :param tickers: like "AAPL,MSFT,ISPA.DE"
@@ -40,7 +40,7 @@ class FMP:
 
         return tickerdatalist
 
-    def getHistoricalPricesByTicker( self, ticker:str, period=Period.oneYear, interval=Interval.fiveDays ) -> TickerData:
+    def getHistoricalPricesByTicker( self, ticker:str, period=Period.oneYear, interval=Interval.oneWeek ) -> TickerData:
         """
 
         :param ticker:

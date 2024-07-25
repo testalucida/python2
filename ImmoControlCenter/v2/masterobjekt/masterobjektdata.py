@@ -22,10 +22,8 @@ class MasterobjektData( IccData ):
               "vwg.vw_id as vw_id, vwg.vw_id as verwalter, vwg.vw_ap as verwalter_ap, vwg.weg_name " \
               "from mietobjekt o " \
               "inner join masterobjekt m on m.master_name = o.master_name " \
-              "left outer join verwaltung vwg on vwg.master_name = o.master_name " \
-              "where o.mobj_id = '%s' " \
-              "and vwg.von <= CURRENT_DATE " \
-              "and (vwg.bis is NULL or vwg.bis = '' or vwg.bis >= CURRENT_DATE) " % mobj_id
+              "left outer join verwaltung vwg on (vwg.master_name = o.master_name and vwg.von <= CURRENT_DATE and (vwg.bis is NULL or vwg.bis = '' or vwg.bis >= CURRENT_DATE))" \
+              "where o.mobj_id = '%s' "  % mobj_id
         return self.readOneGetObject(sql, XMasterobjekt)
 
     def updateMasterobjekt1( self, master_id:int,

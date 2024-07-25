@@ -96,7 +96,7 @@ class InvestMonitorLogic:
     # def getSummeGesamtwerte():
     #     return InvestMonitorLogic.summe_gesamtwerte
 
-    def getDepotPosition( self, ticker:str, period=Period.oneYear, interval=Interval.fiveDays ) -> XDepotPosition:
+    def getDepotPosition( self, ticker:str, period=Period.oneYear, interval=Interval.oneWeek ) -> XDepotPosition:
         """
         Liefert alle Daten für die Depotposition <ticker>.
 
@@ -595,7 +595,7 @@ class InvestMonitorLogic:
         wkn_ticker_list.sort( key=lambda x: x["wkn"] )
         ticker_list = [x["ticker"] for x in wkn_ticker_list]
         histlist: DataFrame = \
-            self._tickerHist.getTickerHistoriesByPeriod( ticker_list, period=period, interval=Interval.fiveDays )
+            self._tickerHist.getTickerHistoriesByPeriod( ticker_list, period=period, interval=Interval.oneWeek )
         dividends: DataFrame = histlist[SeriesName.Dividends.value]
         allOrders: List[XDelta] = self.getAllOrdersList()
         wkn_list = [x["wkn"] for x in wkn_ticker_list]
@@ -636,7 +636,7 @@ class InvestMonitorLogic:
 
         tickers = [d["ticker"] for d in wkn_ticker_list]
         histlist:DataFrame = \
-            self._tickerHist.getTickerHistoriesByPeriod( tickers, period=Period.currentYear, interval=Interval.fiveDays )
+            self._tickerHist.getTickerHistoriesByPeriod( tickers, period=Period.currentYear, interval=Interval.oneWeek )
         dividends:DataFrame = histlist[SeriesName.Dividends.value]
         sum_dividends = 0
         for ticker in tickers:
@@ -656,7 +656,7 @@ class InvestMonitorLogic:
 ##################################################################################
 def testProvideFastInfoInSeparateThread():
     logic = InvestMonitorLogic()
-    depposList:List[XDepotPosition] = logic.getDepotPositions( period=Period.oneYear, interval=Interval.fiveDays )
+    depposList:List[XDepotPosition] = logic.getDepotPositions( period=Period.oneYear, interval=Interval.oneWeek )
     print( depposList )
 
 def testGetSumDividendsCurrentYear2():

@@ -324,11 +324,18 @@ class MainController( IccController ):
         def onExported():
             print( "Database exported.")
             self._rcFtpExportDatabase = True
+            self._win.setCursor(Qt.ArrowCursor)
 
-        def onExportError():
+        def onExportError(args=None):
             print( "uups - something went wrong" )
+            msg = ""
+            if args:
+                for arg in args:
+                    print( arg )
+                    msg += str(arg)
+                    msg += "\n"
             self._win.setCursor( Qt.ArrowCursor )
-            box = ErrorBox( "Datenbank-Export", "Export der Datenbank fehlgeschlagen.", str( ex ) )
+            box = ErrorBox( "Datenbank-Export", "Export der Datenbank fehlgeschlagen.", msg )
             box.exec_()
             self._rcFtpExportDatabase = False
 

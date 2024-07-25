@@ -1,12 +1,5 @@
-from abc import abstractmethod
-from typing import Dict, List, Any
-
-from PySide2.QtCore import Signal
-
+from typing import Dict, List
 from base.interfaces import XBase
-
-
-#################  XDatum  ##############################
 from v2.icc.constants import iccMonthIdxToShortName, iccMonthShortNames, Umlegbar
 
 

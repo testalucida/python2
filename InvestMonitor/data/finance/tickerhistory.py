@@ -63,7 +63,7 @@ class TickerHistory:
     currentDate = datehelper.getIsoStringFromDate( datehelper.getCurrentDate() )
     oneYearAgo = getOneYearAgo()
     default_period:Period = Period.oneYear
-    default_interval:Interval = Interval.fiveDays
+    default_interval:Interval = Interval.oneWeek
     # currConverter = CurrencyConverter()
     # forex_curr_converter = CurrencyRates()
 
@@ -195,14 +195,14 @@ def test2():
 def testDividend():
     ticker = "ISPA.DE"  # "SEDY.L"
     tick_hist = TickerHistory()
-    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.fiveDays )
+    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.oneWeek )
     dividends: Series = df["Dividends"]
     print( dividends.index[0] )
 
 def test():
     ticker = "EUNY.DE" #"IEDY.L" #"ISPA.DE" #"SEDY.L"
     tick_hist = TickerHistory()
-    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.fiveDays )
+    df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.oneWeek )
     series:Series = df["Close"]
     fastinfo = tick_hist.getFastInfo( ticker )
     last_price = fastinfo.last_price
@@ -226,7 +226,7 @@ def testDf():
 
 def testGetTickerHistoriesByDates():
     tick_hist = TickerHistory()
-    df = tick_hist.getTickerHistoriesByPeriod( ["IEDY.L", "ISPA.DE"], period=Period.fiveDays,
+    df = tick_hist.getTickerHistoriesByPeriod( ["IEDY.L", "ISPA.DE"], period=Period.oneWeek,
                                                interval=Interval.oneDay )
     closeDf = df["Close"]
     fast_info = tick_hist.getFastInfo( "IEDY.L" )
@@ -258,7 +258,7 @@ def testFMP():
     def test():
         ticker = "EUNY.DE"  # "IEDY.L" #"ISPA.DE" #"SEDY.L"
         tick_hist = TickerHistory()
-        df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.fiveDays )
+        df = tick_hist.getTickerHistoryByPeriod( ticker, Period.oneYear, Interval.oneWeek )
         series: Series = df["Close"]
         fastinfo = tick_hist.getFastInfo( ticker )
         last_price = fastinfo.last_price

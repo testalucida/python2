@@ -4,7 +4,7 @@ from PySide2.QtCore import QDate
 from dateutil.relativedelta import relativedelta
 from typing import Tuple, Dict
 
-import datehelper
+# import datehelper
 from base.constants import monthLongNames, monatsletzter
 
 def getNumberOfDays( monthNumber:int, year:int=None ) -> int:

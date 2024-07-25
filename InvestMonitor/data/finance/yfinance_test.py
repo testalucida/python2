@@ -10,17 +10,17 @@ from matplotlib.axis import Axis
 from pandas import Series, DataFrame
 # from fixerio import Fixerio
 # fixer_api_access_key = "55582428e945eafd3ff8efbc1cb12706"
-from currency_converter import CurrencyConverter
+#from currency_converter import CurrencyConverter
 
 from base.basetablemodel import BaseTableModel, SumTableModel
 from base.basetableview import BaseTableView
 from generictable_stuff.okcanceldialog import OkCancelDialog
 
 
-def testCurrencyConverter():
-    c = CurrencyConverter()
-    usd = c.convert( 633.98999, "GBP", "EUR" )
-    print( usd )
+# def testCurrencyConverter():
+#     c = CurrencyConverter()
+#     usd = c.convert( 633.98999, "GBP", "EUR" )
+#     print( usd )
 
 # def testFixerio():
 #     url = "http://data.fixer.io/api/latest?access_key=55582428e945eafd3ff8efbc1cb12706"

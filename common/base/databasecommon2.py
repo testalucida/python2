@@ -1,42 +1,9 @@
 import sqlite3
 from datetime import datetime
-from sqlite3 import Connection
 from typing import List, Tuple, Dict, Type
-
-
-
-###########################  DatabaseConnection  ###########################
-# class DatabaseConnection:
-#     __instance = None
-#     def __init__( self ):
-#         self._con:sqlite3.dbapi2.Connection = None
-#         self._pathToDb = ""
-#
-#         if DatabaseConnection.__instance:
-#             raise Exception("DatabaseConnection is a Singleton. You may instantiate it only once." )
-#         else:
-#             DatabaseConnection.__instance = self
-#
-#     @staticmethod
-#     def inst():
-#         if not DatabaseConnection.__instance:
-#             DatabaseConnection()
-#         return DatabaseConnection.__instance
-#
-#     def createConnection( self, pathToDb:str ) -> sqlite3.dbapi2.Connection:
-#         if not self._con:
-#             self._pathToDb = pathToDb
-#             self._con:sqlite3.dbapi2.Connection = sqlite3.connect( pathToDb )
-#         return self._con
-#
-#     def closeConnection( self ):
-#         self._con.close()
-
-
-###########################  DatabaseCommon  ############################
 from base.interfaces import XBase
 
-
+###########################  DatabaseCommon  ############################
 class DatabaseCommon:
     """
     Basisklasse für Anmeldung und Zugriffe auf eine Sqlite-Datenbank.
