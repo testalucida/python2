@@ -150,14 +150,14 @@ class IccMainWindow( QMainWindow ):
         self._shutdownCallback = None  # callback function for shutdown action
         self._createUI()
 
-    def setShutdownCallback( self, cb:Callable ):
-        """
-        :param cb: Callback-Function, die keine Argumente empfängt und einen bool-Wert zurückgeben muss:
-                    True: alles in Ordnung, Anwendung kann geschlossen werden
-                    False: Anwendung nicht schließen
-        :return: None
-        """
-        self._shutdownCallback = cb
+    # def setShutdownCallback( self, cb:Callable ):
+    #     """
+    #     :param cb: Callback-Function, die keine Argumente empfängt und einen bool-Wert zurückgeben muss:
+    #                 True: alles in Ordnung, Anwendung kann geschlossen werden
+    #                 False: Anwendung nicht schließen
+    #     :return: None
+    #     """
+    #     self._shutdownCallback = cb
 
     def setSummenValues( self, x:XSummen ):
         self._idSumEin.setIntValue( x.sumEin )

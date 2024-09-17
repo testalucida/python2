@@ -438,6 +438,7 @@ class MasterMietobjektMieterView( QFrame ):
         def _dataToGui(self):
             x = self._x
             e = self._mleHeader
+            if x.whg_bez is None: x.whg_bez = ""
             html = 'Mietobjekt: <font size="+2"><b>' + x.mobj_id + '</font></b>' + \
                    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bezeichnung: <font size="+2"><b>' + \
                    x.whg_bez + '</font></b>'
